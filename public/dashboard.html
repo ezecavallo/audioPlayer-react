@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/master.css">
+    </head>
+    <body>
+        <nav class="menu showMenu">
+            <div class="header">
+                <span class="closeMenu">Close</span>
+            </div>
+            <ul class="menu__panel">
+                <li class="menu__panel__element">
+                    <a href="#">Profile</a>
+                </li>
+                <li class="menu__panel__element">
+                    <a href="#">URLs</a>
+                </li>
+                <li class="menu__panel__element">
+                    <a href="#">Dashboard</a>
+                </li>
+            </ul>
+        </nav>
+        <header class="header">
+            <div class="header__menu--display">
+                <span>MENU</span>
+            </div>
+            <div class="header__logo">
+                LOREMIMPSU
+            </div>
+            <ul class="header__profile">
+                <li class="header__list__element">
+                    <a href="#">EzSchiller</a>
+                </li>
+            </ul>
+        </header>
+        <div class="wrap">
+            <section class="dashboard">
+                
+            </section>
+        </div>
+        <script type="text/javascript">
+        const toggleSpan = document.querySelector(".header__menu--display");
+        const menuNav = document.querySelector(".menu");
+        const closeMenu = document.querySelector(".closeMenu");
+        let openUp = (target) => {
+            target.style.display = 'block';
+            target.style.transitionProperty = 'transform';
+            target.style.transitionDuration = 300 + 'ms';
+            target.style.transform = "translateX(250px)";
+            window.setTimeout( () => {
+                // target.style.removeProperty('transform');
+                target.style.removeProperty('transition-duration');
+                target.style.removeProperty('transition-property');
+            }, 300);
+        }
+        let closeUp = (target) => {
+            target.style.transitionProperty = 'transform';
+            target.style.transitionDuration = 300 + 'ms';
+            target.style.transform = "translateX(0px)";
+            window.setTimeout( () => {
+                // target.style.removeProperty('transform');
+                target.style.removeProperty('transition-duration');
+                target.style.removeProperty('transition-property');
+                menuNav.style.display = 'none';
+            }, 300);
+        }
+        toggleSpan.addEventListener("click", () => {
+            menuNav.style.display = 'block';
+            setTimeout(function(){
+                openUp(menuNav)
+            },0);
+        });
+        closeMenu.addEventListener("click", () => {
+            setTimeout(function(){
+                closeUp(menuNav)
+            },0);
+        });
+        </script>
+    </body>
+</html>
