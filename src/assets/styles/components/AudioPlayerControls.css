@@ -31,6 +31,10 @@
   transform: translateX(-50%);
 }
 
+#pause::before {
+  background-image: url(../../images/icons8-pause-50.png);
+}
+
 .mediaplayer__controls--back,
 .mediaplayer__controls--next {
   box-shadow: 0px 0px 0px 3px rgba(255, 255, 255, .5);
