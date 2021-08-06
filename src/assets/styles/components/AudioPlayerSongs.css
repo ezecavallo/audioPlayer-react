@@ -1,0 +1,70 @@
+.mediaplayer__songs {
+  display: flex;
+  justify-content: center;
+  margin-top: -70px;
+}
+
+.mediaplayer__songs--info {
+  display: none;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.mediaplayer__songs--info p {
+  margin: 0;
+}
+
+.mediaplayer__songs--info .title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.mediaplayer__songs--info .artist {
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mediaplayer__songs--cover {
+  border-radius: 10px;
+  box-shadow: 0px 0px 18px 0px rgba(0, 0, 0, .27);
+}
+
+.mediaplayer__songs--current {
+  order: 2;
+  width: 300px;
+  z-index: 99;
+}
+
+.mediaplayer__songs--current img {
+  width: 300px;
+  height: 300px;
+}
+
+.mediaplayer__songs--current .mediaplayer__songs--info {
+  display: block;
+}
+
+.mediaplayer__songs--back {
+  order: 1;
+}
+
+.mediaplayer__songs--back .mediaplayer__songs--cover,
+.mediaplayer__songs--next .mediaplayer__songs--cover {
+  width: 200px;
+  height: 200px;
+  margin-top: 50px;
+  filter: blur(2px);
+}
+
+.mediaplayer__songs--back .mediaplayer__songs--cover {
+  margin-right: -35px;
+}
+
+.mediaplayer__songs--next .mediaplayer__songs--cover {
+  margin-left: -35px;
+}
+
+.mediaplayer__songs--next {
+  order: 3;
+}

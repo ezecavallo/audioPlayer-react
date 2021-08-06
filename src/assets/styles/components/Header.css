@@ -1,0 +1,44 @@
+.header {
+  z-index: 99;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 50px;
+}
+
+.nav,
+.header__menu--profile {
+  width: 80px;
+}
+
+.nav__back_button {
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.nav__back_button--icon {
+  content: '';
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url(../../../assets/images/icons8-back-arrow-50.png);
+  width: 20px;
+  height: 20px;
+  position: relative;
+  left: 0;
+  top: -5px;
+  transform: translateY(50%);
+  filter: invert(1);
+}
+
+.header__menu--profile {
+  display: flex;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.header__menu ul {
+  display: none;
+}

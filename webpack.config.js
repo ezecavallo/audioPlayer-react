@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
@@ -31,24 +32,22 @@ module.exports = {
       },
       {
         test: /\.(s*)css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          "css-loader",
-          "sass-loader",
-        ],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
         test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "assets/[hash].[ext]",
-            },
-          },
-        ],
+        type: "asset/resource",
+        generator: {
+          filename: "./images/[name].[contenthash][ext]",
+        },
+        // use: [
+        //   {
+        //     loader: "file-loader",
+        //     options: {
+        //       name: "assets/[hash].[ext]",
+        //     },
+        //   },
+        // ],
       },
     ],
   },
@@ -58,9 +57,17 @@ module.exports = {
       filename: "./index.html",
     }),
     new MiniCssExtractPlugin({
-      filename: "asssets/[name].css",
+      filename: "assets/[name].css",
     }),
     new CleanWebpackPlugin(),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "src", "assets/images"),
+          to: "assets/images",
+        },
+      ],
+    }),
   ],
   devServer: {
     contentBase: path.join(__dirname, "dist"),
