@@ -7,12 +7,19 @@
   bottom: 0px;
   height: 32px;
   background: #574e69;
-  padding: 0 25px;
   box-sizing: border-box;
+}
+
+.mediaplayer__bar--progress {
+  height: 32px;
+  position: absolute;
+  background: #8b7baa;
 }
 
 .mediaplayer__bar p {
   margin: 0;
+  padding: 0 25px;
+  z-index: 9;
   font-size: 14px;
   font-weight: 700;
 }

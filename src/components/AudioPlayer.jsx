@@ -9,8 +9,8 @@ class AudioPlayer extends React.Component {
     return (
       <div className="mediaplayer">
         <AudioPlayerSongs />
-        <AudioPlayerControls />
-        <AudioPlayerBar />
+        <AudioPlayerControls instance={this.props.instance} />
+        <AudioPlayerBar instance={this.props.instance} />
       </div>
     );
   };

@@ -42,14 +42,14 @@ const config = {
     new MiniCssExtractPlugin({
       filename: " assets/[name].[contenthash].css",
     }),
-    // new CopyPlugin({
-    //   patterns: [
-    //     {
-    //       from: path.resolve(__dirname, "src", "assets/images"),
-    //       to: "assets/images",
-    //     },
-    //   ],
-    // }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "src", "assets/music"),
+          to: "assets/music",
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({
       inject: true,
       template: "./public/index.html",
@@ -60,7 +60,7 @@ const config = {
   devServer: {
     contentBase: path.join(__dirname, "dist"),
     compress: true,
-    port: 4000
+    port: 4000,
   },
 };
 
