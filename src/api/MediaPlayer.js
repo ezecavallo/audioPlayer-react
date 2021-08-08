@@ -15,14 +15,6 @@ class MediaPlayer {
     this.media.pause();
   }
 
-  mute() {
-    this.media.muted = true;
-  }
-
-  unmute() {
-    this.media.muted = false;
-  }
-
   getDuration(obj) {
     return new Promise(function (resolve) {
       const audio = new Audio();
