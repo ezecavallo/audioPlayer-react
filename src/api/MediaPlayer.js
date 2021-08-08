@@ -45,17 +45,7 @@ class MediaPlayer {
 
   calculatePercentPlayed(duration) {
     const percentedPlayed = (this.media.currentTime * 100) / duration;
-    console.log(percentedPlayed);
     return percentedPlayed;
-  }
-
-  seek() {
-    this.media.addEventListener(click, (event) => {
-      this.getDuration(this.media).then((duration) => {
-        const timeSelected = event.offsetX / this.offsetWidth;
-        this.media.currentTime = timeSelected * duration;
-      });
-    });
   }
 }
 

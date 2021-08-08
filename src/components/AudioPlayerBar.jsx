@@ -6,34 +6,39 @@ class AudioPlayerBar extends React.Component {
     super(props);
 
     this.state = {
-      play: false,
-      ended: false,
       timePlayed: '0:00',
-      duration: '0:00',
+      duration: {
+        formattedDuration: '0:00',
+        rawDuration: '000',
+      },
       widthBar: 0,
     }
     this.player = this.props.instance;
+    this.seek = this.seek.bind(this);
   }
 
   componentDidMount() {
     this.updateDuration()
-    this.player.media.currentTime = 245;
-    this.player.media.addEventListener("timeupdate", (event) => {
+    this.player.media.addEventListener("timeupdate", () => {
       this.updateTimePlayed();
       this.updateProgressBar();
       this.eventListenerEndedSong()
     });
   }
 
+  seek(event) {
+    const duration = this.state.duration.rawDuration;
+    const timeSelected = event.clientX / event.target.offsetWidth;
+    this.player.media.currentTime = timeSelected * duration;
+  }
+
   updateProgressBar() {
-    this.player.getDuration(this.player.media).then((duration) => {
-      const percentedPlayed = this.player.calculatePercentPlayed(duration);
-      if (percentedPlayed < 100) {
-        this.setState({
-          widthBar: percentedPlayed,
-        });
-      }
-    });
+    const percentedPlayed = this.player.calculatePercentPlayed(this.state.duration.rawDuration);
+    if (percentedPlayed < 100) {
+      this.setState({
+        widthBar: percentedPlayed,
+      });
+    }
   }
 
   updateTimePlayed() {
@@ -47,7 +52,10 @@ class AudioPlayerBar extends React.Component {
     this.player.getDuration(this.player.media).then((duration) => {
       const formattedDuration = this.player.calculateTime(duration);
       this.setState({
-        duration: formattedDuration,
+        duration: {
+          formattedDuration: formattedDuration,
+          rawDuration: duration
+        },
       })
     });
   }
@@ -56,17 +64,17 @@ class AudioPlayerBar extends React.Component {
     this.player.media.onended = () => {
       this.setState({
         widthBar: 0,
-        timePlayed: '0:00'
+        timePlayed: '0:00',
       });
     };
   };
 
   render() {
     return (
-      <div className="mediaplayer__bar">
+      <div onClick={this.seek} className="mediaplayer__bar">
         <div style={{"width": this.state.widthBar + '%'}} className="mediaplayer__bar--progress"></div>
         <p className="mediaplayer__bar--left">{ this.state.timePlayed }</p>
-        <p className="mediaplayer__bar--duration">{ this.state.duration }</p>
+        <p className="mediaplayer__bar--duration">{ this.state.duration.formattedDuration }</p>
       </div>
     );
   };
