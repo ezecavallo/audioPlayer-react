@@ -8,24 +8,30 @@ class AudioPlayerControls extends React.Component {
     this.state = {
       play: false,
       volume: 30,
+      prevVolume: 30,
     }
     this.player = this.props.instance;
     this.togglePlay = this.togglePlay.bind(this);
+    this.setVolume = this.setVolume.bind(this);
+    this.toggleMute = this.toggleMute.bind(this);
   }
 
   componentDidMount() {
-    this.setState({
-      volume: this.getVolume()
-    });
+    this.player.media.volume = this.state.volume / 100;
     this.handlerEndedSong()
   }
 
-  getVolume() {
-    return 3;
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.volume != prevState.volume) {
+      this.player.media.volume = this.state.volume / 100;
+    }
   }
 
-  setVolume() {
-
+  setVolume(e) {
+    this.setState({
+      volume: e.target.value,
+      prevVolume: e.target.value
+    })
   }
 
   togglePlay() {
@@ -57,6 +63,19 @@ class AudioPlayerControls extends React.Component {
 
   }
 
+  toggleMute() {
+    this.setState(state => {
+      if (state.volume != 0) {
+        return {
+          volume: 0
+        }
+      }
+      return {
+        volume: state.prevVolume
+      }
+    })
+  }
+
   toggleRepeat() {
 
   }
@@ -78,8 +97,8 @@ class AudioPlayerControls extends React.Component {
         <button onClick={this.playNextTrack} className="mediaplayer__controls--next"><span></span></button>
         <button onClick={this.toggleRepeat} className="mediaplayer__controls--repeat"><span></span></button>
         <div className="mediaplayer__controls--volume">
-          <button></button>
-          <input type="range" className="volume-slider" id="volume-slider" max="100" value={this.state.volume} />
+          <button onClick={this.toggleMute}></button>
+          <input onChange={this.setVolume} type="range" className="volume-slider" id="volume-slider" max="100" value={this.state.volume} />
         </div>
       </div>
     );
