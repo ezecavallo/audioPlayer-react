@@ -31,25 +31,31 @@ class AudioPlayerSongs extends React.Component {
 
   render() {
     return (
-      <div className="mediaplayer__songs">
-        <AudioPlayerCover 
+      <div className="mediaplayer__songs--container">
+        <div className="mediaplayer__songs">
+          <AudioPlayerCover 
+              title="I SEE IT COMING" 
+              artist="NASAYA, MARO"
+              cover="../assets/images/cover/albumcover.jpg"
+              position="current"
+          />
+          <AudioPlayerCover 
             title="I SEE IT COMING" 
             artist="NASAYA, MARO"
-            cover="../assets/images/cover/albumcover.jpg"
-            position="current"
-        />
-        <AudioPlayerCover 
-          title="I SEE IT COMING" 
-          artist="NASAYA, MARO"
-          cover="../assets/images/cover/ab67616d00001e02b913288a30bced86972d2b3e.jpg"
-          position="next"
-        />
-        <AudioPlayerCover 
-          title="I SEE IT COMING" 
-          artist="NASAYA, MARO"
-          cover="../assets/images/cover/ab67616d00001e020180c5f180f4d69298a02543.jpg"
-          position="back"
-        />
+            cover="../assets/images/cover/ab67616d00001e02b913288a30bced86972d2b3e.jpg"
+            position="next"
+          />
+          <AudioPlayerCover 
+            title="I SEE IT COMING" 
+            artist="NASAYA, MARO"
+            cover="../assets/images/cover/ab67616d00001e020180c5f180f4d69298a02543.jpg"
+            position="back"
+          />
+        </div>
+        <div className="mediaplayer__songs--info">
+          <p className="title">I SEE IT COMING</p>
+          <p className="artist">NASAYA, MARO</p>
+        </div>
       </div>
     );
   };

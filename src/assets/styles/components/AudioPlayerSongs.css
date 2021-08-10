@@ -1,13 +1,19 @@
+.mediaplayer__songs--container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .mediaplayer__songs {
   display: flex;
-  justify-content: center;
   margin-top: -70px;
 }
 
 .mediaplayer__songs--info {
-  display: none;
   text-align: center;
   padding: 10px 0;
+  width: 325px;
 }
 
 .mediaplayer__songs--info p {
@@ -39,10 +45,6 @@
 .mediaplayer__songs--current img {
   width: 300px;
   height: 300px;
-}
-
-.mediaplayer__songs--current .mediaplayer__songs--info {
-  display: block;
 }
 
 .mediaplayer__songs--back {
