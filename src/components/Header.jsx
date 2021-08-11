@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import Search from './Search';
 import '../assets/styles/components/Header.css';
 
@@ -11,7 +12,7 @@ const Header = () => (
     <div className="header__menu">
       <div className="header__menu--profile">
         <img src="" alt="" />
-        <p>Username</p>
+        <Link to="/login">Login</Link>
       </div>
       <ul>
         <li><a href=""></a></li>
