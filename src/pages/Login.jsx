@@ -1,5 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { withCookies, Cookies } from 'react-cookie';
+import { instanceOf } from "prop-types";
 import Layout from '../components/Layout';
 import AudioPlayer from "../components/AudioPlayer";
 import AudioPlayerSongs from "../components/AudioPlayerSongs";
@@ -10,12 +12,15 @@ const CLIENT_ID = "70aa61f4b8034598819c483a48bfcd08";
 const SCOPES = [
   "user-read-currently-playing",
   "user-read-playback-state",
+  "streaming", 
+  "user-read-email", 
+  "user-read-private",
+  "user-read-recently-played"
 ];
 const redirectUri = "http://localhost:4000/login";
 const authLink = `${AUTH_BASE_URL}?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&scope=${SCOPES.join("%20")}&response_type=token`
 
 let hash = window.location.hash
-console.log(hash);
 window.location.hash = "";
 function getCurrentQueryParameters(delimiter = '#') {
   // the access_token is passed back in a URL fragment, not a query string
@@ -26,6 +31,10 @@ function getCurrentQueryParameters(delimiter = '#') {
 }
 
 class Login extends React.Component {
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -38,24 +47,32 @@ class Login extends React.Component {
     this.getAPIStateKey();
     const currentQueryParameters = getCurrentQueryParameters('#');
   }
-  
+
   componentDidUpdate(prevProps, prevState, snapshot) {
     // If getAPIStateKey() update API_STATE then...
     if (prevState.API_STATE !== this.state.API_STATE) {
       let _token = this.getAccessToken()
       if (_token) {
         this.props.onUpdateToken(_token)
+        this.setAccessTokenCookie(_token)
       }
     }
   }
 
+  setAccessTokenCookie(token) {
+    const { cookies } = this.props;
+    cookies.set("access_token", token)
+    cookies.set("loggedIn", true)
+  }
+
   getAPIStateKey() {
     const storedState = localStorage.getItem(this.state.stateKey);
-    this.setState({
-      API_STATE: storedState
-    });
     if (!storedState) {
       this.setAPIStateKey();
+    } else {
+      this.setState({
+        API_STATE: storedState
+      });
     }
   }
 
@@ -90,8 +107,7 @@ class Login extends React.Component {
       localStorage.removeItem(this.state.stateKey);
       return _access_token
     }
-  }
-  
+  }  
 
   render() {
     return (
@@ -110,4 +126,4 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+export default withCookies(Login);

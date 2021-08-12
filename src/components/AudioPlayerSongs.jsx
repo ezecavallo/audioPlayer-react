@@ -7,14 +7,11 @@ class AudioPlayerSongs extends React.Component {
     super(props);
 
     this.state = {
-      currentTrack: '',
-      previousTrack: '',
-      nextTrack: '',
+      items: props.items
     }
   }
 
   componentDidMount() {
-    this.getCurrentState()
   }
 
   getCurrentState() {
@@ -30,31 +27,32 @@ class AudioPlayerSongs extends React.Component {
   }
 
   render() {
+    const { currentTrack, nextTrack, previousTrack } = this.state.items
     return (
       <div className="mediaplayer__songs--container">
         <div className="mediaplayer__songs">
           <AudioPlayerCover 
-              title="I SEE IT COMING" 
-              artist="NASAYA, MARO"
-              cover="../assets/images/cover/albumcover.jpg"
+              title={currentTrack.name} 
+              artist={currentTrack.artists.map((artist) => {artist.name})}
+              cover={currentTrack.album.images[1].url}
               position="current"
           />
           <AudioPlayerCover 
-            title="I SEE IT COMING" 
-            artist="NASAYA, MARO"
-            cover="../assets/images/cover/ab67616d00001e02b913288a30bced86972d2b3e.jpg"
-            position="next"
+              title={nextTrack.name} 
+              artist={nextTrack.artists.map((artist) => {artist.name})}
+              cover={nextTrack.album.images[1].url}
+              position="next"
           />
           <AudioPlayerCover 
-            title="I SEE IT COMING" 
-            artist="NASAYA, MARO"
-            cover="../assets/images/cover/ab67616d00001e020180c5f180f4d69298a02543.jpg"
-            position="back"
+              title={previousTrack.name} 
+              artist={previousTrack.artists.map((artist) => {artist.name})}
+              cover={previousTrack.album.images[1].url}
+              position="back"
           />
         </div>
         <div className="mediaplayer__songs--info">
-          <p className="title">I SEE IT COMING</p>
-          <p className="artist">NASAYA, MARO</p>
+          <p className="title">{currentTrack.name} </p>
+          <p className="artist">{currentTrack.artists.map((artist) => (artist.name))}</p>
         </div>
       </div>
     );
