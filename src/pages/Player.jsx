@@ -4,6 +4,7 @@ import AudioPlayer from "../components/AudioPlayer";
 import AudioPlayerSongs from "../components/AudioPlayerSongs";
 import SpotifyPlayer from '../api/SpotifyPlayer';
 
+// Convert to function
 class Player extends React.Component{
   constructor(props) {
     super(props);
@@ -17,14 +18,20 @@ class Player extends React.Component{
   render() {
     return (
       <Layout user={this.props.user}>
-        {this.props.player.spotifyPlayerLoaded ? (
           <div className="container">
             <AudioPlayerSongs
               items={this.props.items}
-            />
-            <AudioPlayer instance={this.props.instance}/>
+              access_token={this.props.access_token}
+              />
+            {this.props.player.spotifyPlayerLoaded ? (
+              <AudioPlayer 
+                instance={this.props.instance}
+                player={this.props.player}
+                items={this.props.items}
+                access_token={this.props.access_token}
+              />
+            ) : "Loading" }
           </div>
-        ) : "Loading" }
       </Layout>
     )
   }

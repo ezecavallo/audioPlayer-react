@@ -8,8 +8,17 @@ class AudioPlayer extends React.Component {
   render () {
     return (
       <div className="mediaplayer">
-        <AudioPlayerControls instance={this.props.instance} />
-        <AudioPlayerBar instance={this.props.instance} />
+        <AudioPlayerControls 
+          instance={this.props.instance}
+          player={this.props.player}
+          access_token={this.props.access_token}
+        />
+        <AudioPlayerBar 
+          instance={this.props.instance}
+          player={this.props.player}
+          items={this.props.items}
+          access_token={this.props.access_token}
+        />
       </div>
     );
   };

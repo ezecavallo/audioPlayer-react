@@ -72,6 +72,18 @@ class SpotifyAPI {
     const data = await response.json();
     return data;
   }
+
+  async getRecentlyPlaying(signal) {
+    const url = this._baseUri + `/me/player/shuffle`;
+    const response = await this.performFetch(url, "PUT", signal);
+    const contentType = response.headers.get("content-type");
+    const statusCode = response.status;
+    if (statusCode === 204) {
+      throw new Error("No track currently playing");
+    }
+    const data = await response.json();
+    return data;
+  }
 }
 
 export default SpotifyAPI;
