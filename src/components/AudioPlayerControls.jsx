@@ -23,10 +23,6 @@ class AudioPlayerControls extends React.Component {
 
   componentDidMount() {
     this.getVolume();
-    // local
-    // this.player.media.volume = this.state.volume / 100;
-    // this.handlerEndedSong()
-
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -37,7 +33,6 @@ class AudioPlayerControls extends React.Component {
     }
   }
 
-  // Local
   setVolume(e) {
     this.setState({
       volume: e.target.value,
@@ -54,7 +49,7 @@ class AudioPlayerControls extends React.Component {
 
   togglePlay() {
     if (!this.props.player.playing) {
-      this.state.spotifyPlayer.togglePlay().then(() => {
+      this.state.spotifyPlayer.resume().then(() => {
         console.log('Toggled playback!');
       });
     } else {
@@ -104,14 +99,6 @@ class AudioPlayerControls extends React.Component {
 
   toggleRepeat() {
 
-  }
-
-  handlerEndedSong() {
-    this.player.media.addEventListener("ended", (event) => {
-      this.setState({
-        playing: false
-      })
-    });
   }
 
   render() {

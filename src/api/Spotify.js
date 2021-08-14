@@ -73,16 +73,32 @@ class SpotifyAPI {
     return data;
   }
 
-  async getRecentlyPlaying(signal) {
-    const url = this._baseUri + `/me/player/shuffle`;
+  async toggleShuffle(signal, state, device_id = "") {
+    const url = this._baseUri + `/me/player/shuffle?state=${state}`;
     const response = await this.performFetch(url, "PUT", signal);
     const contentType = response.headers.get("content-type");
     const statusCode = response.status;
-    if (statusCode === 204) {
-      throw new Error("No track currently playing");
+    if (statusCode === 404) {
+      throw new Error("No available devices are found");
     }
-    const data = await response.json();
-    return data;
+    if (statusCode === 403) {
+      throw new Error("Non-premium");
+    }
+    return [];
+  }
+
+  async toggleShuffle(signal, device_id = "") {
+    const url = this._baseUri + `/me/player/play?device_id=${device_id}`;
+    const response = await this.performFetch(url, "PUT", signal);
+    const contentType = response.headers.get("content-type");
+    const statusCode = response.status;
+    if (statusCode === 404) {
+      throw new Error("No available devices are found");
+    }
+    if (statusCode === 403) {
+      throw new Error("Non-premium");
+    }
+    return [];
   }
 }
 

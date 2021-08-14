@@ -273,7 +273,8 @@ class Playback extends React.Component {
       this.setState({
         player: {
           spotifyPlayerLoaded: true,
-          spotifyPlayer
+          device_id,
+          spotifyPlayer,
         }
       })
     });
