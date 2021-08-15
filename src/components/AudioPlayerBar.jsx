@@ -21,7 +21,6 @@ class AudioPlayerBar extends React.Component {
     this.updateDuration()
     this.updateTimePlayed();
     this.updateProgressBar();
-    // this.eventListenerEndedSong()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -95,15 +94,6 @@ class AudioPlayerBar extends React.Component {
     const currentValue = `${currentMinute}:${formattedSeconds}`;
     return currentValue;
   }
-
-  eventListenerEndedSong() {
-    this.player.media.onended = () => {
-      this.setState({
-        widthBar: 0,
-        timePlayed: '0:00',
-      });
-    };
-  };
 
   render() {
     return (

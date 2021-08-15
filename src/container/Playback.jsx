@@ -114,6 +114,9 @@ class Playback extends React.Component {
 
   getPlaybackCurrentState() {
     this.state.player.spotifyPlayer.getCurrentState().then(state => {
+      if (!state) {
+        return
+      }
       let {
         paused,
         position,
@@ -213,7 +216,7 @@ class Playback extends React.Component {
       getOAuthToken: (cb) => {
         cb(token);
       },
-      volume: this.state.player.initialVolume,
+      volume: this.state.player.initialVolume / 100,
     });
     
     // Error handling

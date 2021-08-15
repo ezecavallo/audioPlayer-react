@@ -8,7 +8,7 @@ import AudioPlayerSongs from "../components/AudioPlayerSongs";
 
 const AUTH_BASE_URL = 'https://accounts.spotify.com/authorize';
 
-const CLIENT_ID = "70aa61f4b8034598819c483a48bfcd08";
+const CLIENT_ID = process.env.CLIENT_ID;
 const SCOPES = [
   "user-read-currently-playing",
   "user-read-playback-state",
