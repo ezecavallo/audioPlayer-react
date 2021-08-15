@@ -19,27 +19,13 @@ class Playback extends React.Component {
         username: '',
       },
       player: {
+        initialVolume: 30,
         spotifyPlayerLoaded: false,
+        spotifyPlayerTransfered: false,
       },
       loading: true,
       items: {
         loading: true,
-        item: {
-          album: {
-            images: [{ url: "" }]
-          },
-          name: "",
-          artists: [{ name: "" }],
-          duration_ms:0,
-        },
-        item: {
-          album: {
-            images: [{ url: "" }]
-          },
-          name: "",
-          artists: [{ name: "" }],
-          duration_ms:0,
-        },
       },
       is_playing: "Paused",
       progress_ms: 0,
@@ -56,7 +42,6 @@ class Playback extends React.Component {
     this.api.setAccessToken(this.props.auth.access_token);
     await this.getUserProfile(this.signal);
     await this.getRecentlyPlaying(3, this.signal);
-    // await this.fetchData(this.signal)
     this.loadSpotifyPlayer()
 
     if (!window.onSpotifyWebPlaybackSDKReady) {
@@ -65,15 +50,15 @@ class Playback extends React.Component {
       this.initializeSpotifyPlayer();
     }
     this.intervalTick = setInterval(() => {
-      this.getTickCurrentlyPlayingTime()
+      if (this.state.player.spotifyPlayerTransfered) {
+        this.getPlaybackCurrentState();
+      }
     }, 1000);
-      
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.player.spotifyPlayerLoaded) {
       this.state.player.spotifyPlayer.addListener("player_state_changed", (state) => {
-        console.log(state);
         if (!state.paused && !this.state.player.playing) {
           this.setState((state) => ({
             player: {
@@ -97,11 +82,6 @@ class Playback extends React.Component {
   componentWillUnmount() {
     this.controller.abort()
     window.onSpotifyWebPlaybackSDKReady = null;
-  }
-
-  async fetchData(signal) {
-    await this.getCurrentlyPlaying(signal);
-    await this.getCurrentPlaybackInformation(signal);
   }
 
   async getUserProfile(signal) {
@@ -132,14 +112,6 @@ class Playback extends React.Component {
     }
   }
 
-  getTickCurrentlyPlayingTime() {
-    
-    this.setState((state) => ({number: state.number + 1}))
-    if (this.state.player.playing) {
-      this.getPlaybackCurrentState();
-    }
-  }
-
   getPlaybackCurrentState() {
     this.state.player.spotifyPlayer.getCurrentState().then(state => {
       let {
@@ -151,8 +123,14 @@ class Playback extends React.Component {
       let {
         current_track,
         next_tracks: [next_track],
-        previous_tracks: [previous_track],
+        previous_tracks: [previousTrackFirst, previousTrackSecond],
       } = state.track_window;
+      var previous_track = undefined;
+      if (!previousTrackSecond) {
+        var previous_track = previousTrackFirst;
+      } else {
+       var previous_track = previousTrackSecond;
+      }
       this.setState((prevState) => {
         const stateToUpdate = {
           player: {
@@ -178,19 +156,6 @@ class Playback extends React.Component {
       });
     });
   }
-
-  async getCurrentPlaybackInformation(signal) {
-    try {
-      const data = await this.api.getCurrentPlaybackInformation(signal);
-      if (data.error) {
-        this.handleUnauthorized(data);
-      }
-      console.log('getCurrentPlaybackInformation', data);
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
 
   // Go to AudioPLayerSongs
   async getRecentlyPlaying(limit, signal) {
@@ -244,10 +209,11 @@ class Playback extends React.Component {
   initializeSpotifyPlayer = () => {
     const token = this.props.auth.access_token;
     const spotifyPlayer = new window.Spotify.Player({
-      name: "Web Playback SDK Quick Start Player",
+      name: "audioPlayer-react",
       getOAuthToken: (cb) => {
         cb(token);
       },
+      volume: this.state.player.initialVolume,
     });
     
     // Error handling
@@ -263,28 +229,25 @@ class Playback extends React.Component {
     spotifyPlayer.addListener("playback_error", ({ message }) => {
       console.error(message);
     });
-    spotifyPlayer.addListener("player_state_changed", (state) => {
-      // console.log(state);
-    });
-    
+
     // Ready
     spotifyPlayer.addListener("ready", ({ device_id }) => {
       console.log("Ready with Device ID", device_id);
+      this.api.transferUserPlayback(this.signal, device_id);
       this.setState({
         player: {
           spotifyPlayerLoaded: true,
+          spotifyPlayerTransfered: true,
           device_id,
           spotifyPlayer,
         }
       })
     });
     
-    // Not Ready
     spotifyPlayer.addListener("not_ready", ({ device_id }) => {
       console.log("Device ID has gone offline", device_id);
     });
     
-    // Connect to the player!
     spotifyPlayer.connect()
   };
 

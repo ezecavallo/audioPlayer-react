@@ -100,6 +100,32 @@ class SpotifyAPI {
     }
     return [];
   }
+
+  async transferUserPlayback(signal, device_id) {
+    const data = {
+      device_ids: [device_id],
+    };
+    const fetchOptions = {
+      signal: signal,
+      method: "PUT",
+      headers: new Headers({
+        "Content-Type": "application/x-www-form-urlencoded; application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${this._accessToken}`,
+      }),
+      body: JSON.stringify(data),
+    };
+    const url = this._baseUri + `/me/player/`;
+    const response = await fetch(url, fetchOptions);
+    const statusCode = response.status;
+    if (statusCode === 404) {
+      throw new Error("No available devices are found");
+    }
+    if (statusCode === 403) {
+      throw new Error("Non-premium");
+    }
+    return [];
+  }
 }
 
 export default SpotifyAPI;

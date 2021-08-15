@@ -6,6 +6,7 @@ class AudioPlayerBar extends React.Component {
     super(props);
 
     this.state = {
+      spotifyPlayer: this.props.player.spotifyPlayer,
       timePlayed: '0:00',
       positionMs: 0,
       formattedDuration: '0:00',
@@ -34,13 +35,24 @@ class AudioPlayerBar extends React.Component {
   }
 
   seek(event) {
-    const duration = this.state.duration.rawDuration;
-    const timeSelected = event.clientX / event.target.offsetWidth;
-    this.player.media.currentTime = timeSelected * duration;
+    const duration = this.state.rawDuration;
+    const timeSelected = event.clientX / event.target.offsetWidth * duration;
+    const newTime = this.calculateTime(timeSelected)
+    const percentedPlayed = this.calculatePercentPlayed(timeSelected, duration)
+    console.log(timeSelected);
+    console.log(newTime, percentedPlayed);
+    this.setState({
+      timePlayed: newTime,
+      widthBar: percentedPlayed
+    }, () => {
+      this.state.spotifyPlayer.seek(timeSelected).then(() => {
+        console.log('Changed position!');
+      });
+    })
   }
 
   updateProgressBar() {
-    const percentedPlayed = this.calculatePercentPlayed(this.state.rawDuration);
+    const percentedPlayed = this.calculatePercentPlayed(this.props.player.position, this.state.rawDuration);
     console.log(percentedPlayed);
     if (percentedPlayed < 100) {
       this.setState({
@@ -49,8 +61,8 @@ class AudioPlayerBar extends React.Component {
     }
   }
 
-  calculatePercentPlayed(duration) {
-    const percentedPlayed = (this.props.player.position * 100) / duration;
+  calculatePercentPlayed(position, duration) {
+    const percentedPlayed = (position * 100) / duration;
     return percentedPlayed;
   }
 
