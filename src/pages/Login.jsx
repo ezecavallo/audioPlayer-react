@@ -2,9 +2,6 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { withCookies, Cookies } from 'react-cookie';
 import { instanceOf } from "prop-types";
-import Layout from '../components/Layout';
-import AudioPlayer from "../components/AudioPlayer";
-import AudioPlayerSongs from "../components/AudioPlayerSongs";
 
 const AUTH_BASE_URL = 'https://accounts.spotify.com/authorize';
 

@@ -27,11 +27,7 @@ class Playback extends React.Component {
       items: {
         loading: true,
       },
-      is_playing: "Paused",
-      progress_ms: 0,
-      number: 1
     };
-    this.player = document.getElementById('audio');
     this.controller = new window.AbortController()
     this.signal = this.controller.signal
   }
@@ -82,6 +78,7 @@ class Playback extends React.Component {
   componentWillUnmount() {
     this.controller.abort()
     window.onSpotifyWebPlaybackSDKReady = null;
+    clearInterval(this.intervalTick);
   }
 
   async getUserProfile(signal) {
@@ -113,7 +110,8 @@ class Playback extends React.Component {
   }
 
   getPlaybackCurrentState() {
-    this.state.player.spotifyPlayer.getCurrentState().then(state => {
+    this.state.player.spotifyPlayer.getCurrentState()
+    .then(state => {
       if (!state) {
         return
       }
@@ -157,6 +155,9 @@ class Playback extends React.Component {
         // }
         return(stateToUpdate);
       });
+    })
+    .catch((error) => {
+      console.log(error);
     });
   }
 

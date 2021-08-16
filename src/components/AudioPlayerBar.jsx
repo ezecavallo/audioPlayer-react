@@ -35,11 +35,9 @@ class AudioPlayerBar extends React.Component {
 
   seek(event) {
     const duration = this.state.rawDuration;
-    const timeSelected = event.clientX / event.target.offsetWidth * duration;
+    const timeSelected = Math.round(event.clientX / event.target.offsetWidth * duration);
     const newTime = this.calculateTime(timeSelected)
     const percentedPlayed = this.calculatePercentPlayed(timeSelected, duration)
-    console.log(timeSelected);
-    console.log(newTime, percentedPlayed);
     this.setState({
       timePlayed: newTime,
       widthBar: percentedPlayed
