@@ -11,14 +11,11 @@ const Player = (props) => {
         <div className="container">
           <AudioPlayerSongs
             items={props.items}
-            access_token={props.access_token}
             />
           {props.player.spotifyPlayerLoaded ? (
-            <AudioPlayer 
-              instance={props.instance}
+            <AudioPlayer  
               player={props.player}
               items={props.items}
-              access_token={props.access_token}
             />
           ) : "Loading" }
         </div>
