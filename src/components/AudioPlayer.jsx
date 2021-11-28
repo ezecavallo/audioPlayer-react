@@ -8,15 +8,11 @@ const AudioPlayer = (props) => {
   return (
     <div className="mediaplayer">
       <AudioPlayerControls 
-        instance={props.instance}
         player={props.player}
-        access_token={props.access_token}
       />
-      <AudioPlayerBar 
-        instance={props.instance}
+      <AudioPlayerBar
         player={props.player}
         items={props.items}
-        access_token={props.access_token}
       />
     </div>
   );

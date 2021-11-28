@@ -7,6 +7,8 @@ import Playback from '../container/Playback';
 import "../assets/styles/normalize.css";
 import "../assets/styles/App.css";
 
+const ThemeContext = React.createContext('light');
+
 class App extends React.Component {
   static propTypes = {
     cookies: instanceOf(Cookies).isRequired

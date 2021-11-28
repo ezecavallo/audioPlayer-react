@@ -255,30 +255,15 @@ class Playback extends React.Component {
     spotifyPlayer.connect()
   };
 
-  // Utils
-  handleRemoveCookie() {
-    const { cookies } = this.props;
-    cookies.remove("access_token");
-    cookies.remove("loggedIn");
-    console.log('removed');
-    this.setState({
-      user: {
-        unauthorized: true
-      }
-    })
-  };
-
   render() {
     const { user, player, items } = this.state
     return (
       <React.Fragment>
         {this.props.auth.loggedIn && this.props.auth.access_token ? (
           <Player 
-            instance={new MediaPlayer({el: this.player})}
-            user={user}
-            access_token={this.props.auth.access_token}
             player={player}
             items={items}
+            user={user}
             /> ) : (
           <Redirect to="/login" /> 
         )}
