@@ -27,8 +27,8 @@ const AudioPlayerSongs = (props) => {
         />
       </div>
       <div className="mediaplayer__songs--info">
-        <p className="title">{currentTrack?.name} </p>
-        <p className="artist">{currentTrack?.artists.map((artist) => (artist.name))}</p>
+        <p className="title">{currentTrack?.name}</p>
+        <p className="artist">{currentTrack?.artists.map((artist, index) => (`${artist.name} ${index == 0 && currentTrack.artists.length > 1 ? '.ft ' : ''}`))}</p>
       </div>
     </div>
   );

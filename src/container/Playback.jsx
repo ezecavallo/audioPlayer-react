@@ -71,8 +71,15 @@ class Playback extends React.Component {
             }
           }))
         }
+
       });
     }
+    // Change cover background
+    document.getElementById('app').setAttribute(
+      'style', 
+      // `--cover-url: url(${this.state.items.currentTrack?.album.images[0].url})`
+      `--cover-url: url(${this.state.items.coverCurrentTrack})`
+    )  
   }
 
   componentWillUnmount() {
@@ -146,6 +153,7 @@ class Playback extends React.Component {
             currentTrack: current_track,
             nextTrack: next_track,
             previousTrack: previous_track || prevState.items.previousTrack,
+            coverCurrentTrack: current_track.album.images[0].url
           }
         }
         const itemsToUpdate = {
@@ -172,6 +180,7 @@ class Playback extends React.Component {
           currentTrack: data.items[0].track,
           previousTrack: data.items[1].track,
           nextTrack: data.items[2].track,
+          coverCurrentTrack: data.items[0].track.album.images[0].url
         }
       })
       console.log(data);
