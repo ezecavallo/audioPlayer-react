@@ -1,14 +1,14 @@
-import React from 'react';
-import { Redirect } from 'react-router-dom';
-import { withCookies, Cookies } from 'react-cookie';
-import { instanceOf } from 'prop-types';
-import Player from '../pages/Player';
-import MediaPlayer from '../api/MediaPlayer';
-import SpotifyAPI from '../api/Spotify';
+import React from "react";
+import { Redirect } from "react-router-dom";
+import { withCookies, Cookies } from "react-cookie";
+import { instanceOf } from "prop-types";
+import Player from "../pages/Player";
+import MediaPlayer from "../api/MediaPlayer";
+import SpotifyAPI from "../api/Spotify";
 
 class Playback extends React.Component {
   static propTypes = {
-    cookies: instanceOf(Cookies).isRequired
+    cookies: instanceOf(Cookies).isRequired,
   };
 
   constructor(props) {
@@ -16,7 +16,7 @@ class Playback extends React.Component {
     this.state = {
       user: {
         userId: null,
-        username: '',
+        username: "",
       },
       player: {
         initialVolume: 30,
@@ -28,17 +28,16 @@ class Playback extends React.Component {
         loading: true,
       },
     };
-    this.controller = new window.AbortController()
-    this.signal = this.controller.signal
+    this.controller = new window.AbortController();
+    this.signal = this.controller.signal;
   }
-
 
   async componentDidMount() {
     this.api = new SpotifyAPI();
     this.api.setAccessToken(this.props.auth.access_token);
     await this.getUserProfile(this.signal);
     await this.getRecentlyPlaying(3, this.signal);
-    this.loadSpotifyPlayer()
+    this.loadSpotifyPlayer();
 
     if (!window.onSpotifyWebPlaybackSDKReady) {
       window.onSpotifyWebPlaybackSDKReady = this.initializeSpotifyPlayer;
@@ -54,36 +53,38 @@ class Playback extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.player.spotifyPlayerLoaded) {
-      this.state.player.spotifyPlayer.addListener("player_state_changed", (state) => {
-        if (!state.paused && !this.state.player.playing) {
-          this.setState((state) => ({
-            player: {
-              ...state.player,
-              playing: true
-            }
-          }))
+      this.state.player.spotifyPlayer.addListener(
+        "player_state_changed",
+        (state) => {
+          if (!state.paused && !this.state.player.playing) {
+            this.setState((state) => ({
+              player: {
+                ...state.player,
+                playing: true,
+              },
+            }));
+          }
+          if (state.paused && this.state.player.playing) {
+            this.setState((state) => ({
+              player: {
+                ...state.player,
+                playing: false,
+              },
+            }));
+          }
         }
-        if (state.paused && this.state.player.playing) {
-          this.setState((state) => ({
-            player: {
-              ...state.player,
-              playing: false
-            }
-          }))
-        }
-
-      });
+      );
     }
     // Change cover background
-    document.getElementById('app').setAttribute(
-      'style', 
+    document.getElementById("app").setAttribute(
+      "style",
       // `--cover-url: url(${this.state.items.currentTrack?.album.images[0].url})`
       `--cover-url: url(${this.state.items.coverCurrentTrack})`
-    )  
+    );
   }
 
   componentWillUnmount() {
-    this.controller.abort()
+    this.controller.abort();
     window.onSpotifyWebPlaybackSDKReady = null;
     clearInterval(this.intervalTick);
   }
@@ -97,8 +98,8 @@ class Playback extends React.Component {
       this.setState({
         user: {
           userId: data.id,
-          username: data.display_name
-        }
+          username: data.display_name,
+        },
       });
     }
   }
@@ -107,9 +108,9 @@ class Playback extends React.Component {
     try {
       const data = await this.api.getCurrentlyPlaying(signal);
       if (data.error) {
-        throw new Error(data.error.message)
+        throw new Error(data.error.message);
       } else {
-        console.log('getCurrentlyPlaying', data);
+        console.log("getCurrentlyPlaying", data);
       }
     } catch (error) {
       console.log(error.message);
@@ -117,56 +118,51 @@ class Playback extends React.Component {
   }
 
   getPlaybackCurrentState() {
-    this.state.player.spotifyPlayer.getCurrentState()
-    .then(state => {
-      if (!state) {
-        return
-      }
-      let {
-        paused,
-        position,
-        repeat_mode,
-        shuffle
-      } = state
-      let {
-        current_track,
-        next_tracks: [next_track],
-        previous_tracks: [previousTrackFirst, previousTrackSecond],
-      } = state.track_window;
-      var previous_track = undefined;
-      if (!previousTrackSecond) {
-        var previous_track = previousTrackFirst;
-      } else {
-       var previous_track = previousTrackSecond;
-      }
-      this.setState((prevState) => {
-        const stateToUpdate = {
-          player: {
-            ...prevState.player,
-            // playing: !paused,
-            position: position,
-            repeat_mode: repeat_mode,
-            shuffle: shuffle
-          },
-          items: {
-            loading: false,
-            currentTrack: current_track,
-            nextTrack: next_track,
-            previousTrack: previous_track || prevState.items.previousTrack,
-            coverCurrentTrack: current_track.album.images[0].url
-          }
+    this.state.player.spotifyPlayer
+      .getCurrentState()
+      .then((state) => {
+        if (!state) {
+          return;
         }
-        const itemsToUpdate = {
+        let { paused, position, repeat_mode, shuffle } = state;
+        let {
+          current_track,
+          next_tracks: [next_track],
+          previous_tracks: [previousTrackFirst, previousTrackSecond],
+        } = state.track_window;
+        var previous_track = undefined;
+        if (!previousTrackSecond) {
+          var previous_track = previousTrackFirst;
+        } else {
+          var previous_track = previousTrackSecond;
         }
-        // if (prevState.items.currentTrack.name != itemsToUpdate.currentTrack.name) {
-        //   stateToUpdate.items = itemsToUpdate;
-        // }
-        return(stateToUpdate);
+        this.setState((prevState) => {
+          const stateToUpdate = {
+            player: {
+              ...prevState.player,
+              // playing: !paused,
+              position: position,
+              repeat_mode: repeat_mode,
+              shuffle: shuffle,
+            },
+            items: {
+              loading: false,
+              currentTrack: current_track,
+              nextTrack: next_track,
+              previousTrack: previous_track || prevState.items.previousTrack,
+              coverCurrentTrack: current_track.album.images[0].url,
+            },
+          };
+          const itemsToUpdate = {};
+          // if (prevState.items.currentTrack.name != itemsToUpdate.currentTrack.name) {
+          //   stateToUpdate.items = itemsToUpdate;
+          // }
+          return stateToUpdate;
+        });
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
   }
 
   // Go to AudioPLayerSongs
@@ -180,9 +176,9 @@ class Playback extends React.Component {
           currentTrack: data.items[0].track,
           previousTrack: data.items[1].track,
           nextTrack: data.items[2].track,
-          coverCurrentTrack: data.items[0].track.album.images[0].url
-        }
-      })
+          coverCurrentTrack: data.items[0].track.album.images[0].url,
+        },
+      });
       console.log(data);
     } catch (error) {
       console.log(error.message);
@@ -190,27 +186,30 @@ class Playback extends React.Component {
   }
 
   async handleUnauthorized(data) {
-    if (data.error?.message === 'Invalid access token' ||
-        data.error?.message === 'The access token expired') {
-      this.props.handleRemoveCookie()
+    if (
+      data.error?.message === "Invalid access token" ||
+      data.error?.message === "The access token expired"
+    ) {
+      this.props.handleRemoveCookie();
     }
-    return data
+    return data;
   }
 
   loadSpotifyPlayer() {
     return new Promise((resolve, reject) => {
-      const scriptTag = document.getElementById('spotify-player');
+      const scriptTag = document.getElementById("spotify-player");
 
       if (!scriptTag) {
-        const script = document.createElement('script');
+        const script = document.createElement("script");
 
-        script.id = 'spotify-player';
-        script.type = 'text/javascript';
+        script.id = "spotify-player";
+        script.type = "text/javascript";
         script.async = false;
         script.defer = true;
-        script.src = 'https://sdk.scdn.co/spotify-player.js';
+        script.src = "https://sdk.scdn.co/spotify-player.js";
         script.onload = () => resolve();
-        script.onerror = (error) => reject(new Error(`loadScript: ${error.message}`));
+        script.onerror = (error) =>
+          reject(new Error(`loadScript: ${error.message}`));
 
         document.head.appendChild(script);
       } else {
@@ -228,7 +227,7 @@ class Playback extends React.Component {
       },
       volume: this.state.player.initialVolume / 100,
     });
-    
+
     // Error handling
     spotifyPlayer.addListener("initialization_error", ({ message }) => {
       console.error(message);
@@ -253,31 +252,28 @@ class Playback extends React.Component {
           spotifyPlayerTransfered: true,
           device_id,
           spotifyPlayer,
-        }
-      })
+        },
+      });
     });
-    
+
     spotifyPlayer.addListener("not_ready", ({ device_id }) => {
       console.log("Device ID has gone offline", device_id);
     });
-    
-    spotifyPlayer.connect()
+
+    spotifyPlayer.connect();
   };
 
   render() {
-    const { user, player, items } = this.state
+    const { user, player, items } = this.state;
     return (
       <React.Fragment>
         {this.props.auth.loggedIn && this.props.auth.access_token ? (
-          <Player 
-            player={player}
-            items={items}
-            user={user}
-            /> ) : (
-          <Redirect to="/login" /> 
+          <Player player={player} items={items} user={user} />
+        ) : (
+          <Redirect to="/login" />
         )}
       </React.Fragment>
-    )
+    );
   }
 }
 
